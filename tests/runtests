@@ -22,6 +22,7 @@
 # pass config
 #
 PASS="/usr/bin/pass"
+UPDATER_DIR="../updaters/instances"
 export PASSWORD_STORE_ENABLE_EXTENSIONS=true
 export PASSWORD_STORE_EXTENSIONS_DIR="../"
 export PASSWORD_STORE_DIR="password-store"
@@ -56,7 +57,7 @@ success() { printf " ${bold}${green}(*)${reset} ${green}%s${reset}\n" "${*}"; }
 error() { echo " ${bold}${red}*${reset}${bold} Error :${reset} ${*}"; }
 die() { error "${@}" && exit 1; }
 notice() { echo; title "${@}"; echo; }
-test_xclip() { 
+test_xclip() {
 	echo "$RANDOM" | xclip -i &> /dev/null
 	[ $? = 0 ] || XCLIP=1
 }
@@ -71,6 +72,8 @@ test_xclip # xclip needs a X server, disable xclip tests when running on a serve
 typeset -A results
 tests=(pass-update pass-update-multiple pass-update-opt)
 [ $XCLIP = 0 ] && tests+=(pass-update-clip)
+for instance in "$(ls "$UPDATER_DIR")"; do
+	tests+=("autoupdate-${instance##*/}")
 
 #
 # GnuPG Conf.
@@ -91,21 +94,38 @@ KEY5="4D2AFBDE67C60F5999D143AFA6E073D439E5020C"
 notice "Loading test suite"
 [[ -e "$PASSWORD_STORE_DIR" ]] || pass_populate "$KEY1"
 
-pass_update() {
+pass_manual_update() {
 	notice "Test - updating password."
 	pass update Website/user1 --force
 	test $? = 0 && results[pass-update]=SUCCESS
-	
+
 	if [ $XCLIP = 0 ]; then
 		notice "Test - updating password with clip."
 		pass update Website/user2 --clip --force
 		test $? = 0 && results[pass-update-clip]=SUCCESS
 	fi
-	
+
 	notice "Test - updating more than one password"
 	pass update Website/user1 Website/user2 --force
 	test $? = 0 && results[pass-update-multiple]=SUCCESS
-	
+}
+
+pass_auto_update() {
+
+	# This repository contains valid credential for test accounts on multiple
+	# website and therefore is NOT present in the git tree.
+	export PASSWORD_STORE_DIR="auto-password-store"
+
+	for instance in "$(ls "$UPDATER_DIR")"; do
+		notice "Testing auto update '${instance##*/}' password"
+		pass update ${instance##*/} --auto
+		# TODO: how to check.
+		test $? = 0 && results["autoupdate-${instance##*/}"]=SUCCESS
+	done
+}
+
+pass_update_opt() {
+
 	notice "Test - Bad options"
 	res=0
 	pass update
@@ -119,7 +139,9 @@ pass_update() {
 	test $res = 0 && results[pass-update-opt]=SUCCESS
 }
 
-pass_update
+pass_manual_update
+pass_auto_update
+pass_update_opt
 
 
 #
@@ -131,8 +153,6 @@ for t in ${tests[@]}; do
 	[[ "$res" == "SUCCESS" ]] || GLOBAL_RESULT=1
     success "$t  $res"
 done
-
-success "Done. You can remove temporary leftovers from $PASSWORD_STORE_DIR/"
 
 unset PASSWORD_STORE_ENABLE_EXTENSIONS
 unset PASSWORD_STORE_EXTENSIONS_DIR
