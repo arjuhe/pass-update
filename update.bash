@@ -106,9 +106,15 @@ _updater() {
 #
 # This function should only be used by UPDATER_BIN.
 cmd_update_generate() {
+	local no_symbols="$1"
 	local length="${GENERATED_LENGTH}"
-	local characters="${CHARACTER_SET}"
 	local password
+
+	if [[ "$no_symbols" == "no_symbols" ]]; then
+		characters="${CHARACTER_SET_NO_SYMBOLS}"
+	else
+		characters="${CHARACTER_SET}"
+	fi
 
 	[[ $length =~ ^[0-9]+$ ]] || _die "Error: pass-length \"$length\" must be a number."
 	read -r -n $length password < <(LC_ALL=C tr -dc "$characters" < /dev/urandom)
@@ -139,7 +145,7 @@ while true; do case $1 in
 	-q|--quiet) QUIET=1; shift ;;
 	-c|--clip) CLIP="--clip"; shift ;;
 	-f|--force) FORCE=1; shift ;;
-	--generate) cmd_update_generate; exit 0 ;;
+	--generate) shift; cmd_update_generate "$@";  exit 0 ;;
 	-l|--list) cmd_update_list; exit 0 ;;
 	-h|--help) shift; cmd_update_usage; exit 0 ;;
 	-v|--version) shift; cmd_update_verion; exit 0 ;;
