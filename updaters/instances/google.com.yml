@@ -1,0 +1,37 @@
+---
+
+instance: google
+
+url: https://accounts.google.com
+
+visit: /ServiceLogin?service=accountsettings&passive=1209600&osid=1&continue=https://myaccount.google.com/signinoptions/password&followup=https://myaccount.google.com/signinoptions/password
+
+pages:
+  - auth
+ - 2fa
+  - update
+
+auth:
+  title: Sign
+  find:
+    - Email
+    - Passwd
+  input:
+    - login
+    - password
+
+2fa:
+  title:
+  find:
+    - Pin
+  input:
+    - otp
+
+update:
+  title: Password
+  find:
+    - ''
+    - ''
+  input:
+    - new-password
+    - new-password

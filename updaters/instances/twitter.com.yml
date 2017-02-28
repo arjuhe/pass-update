@@ -1,0 +1,31 @@
+---
+
+instance: twitter.com
+
+url: https://twitter.com
+
+visit: /settings/password
+
+pages:
+  - auth
+  - update
+
+auth:
+  title: Login
+  find:
+    - "session[username_or_email]"
+    - "session[password]"
+  input:
+    - login
+    - password
+
+update:
+  title: Settings
+  find:
+    - current_password
+    - user_password
+    - user_password_confirmation
+  input:
+    - password
+    - new-password
+    - new-password

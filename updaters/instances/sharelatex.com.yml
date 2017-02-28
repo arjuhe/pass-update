@@ -1,0 +1,31 @@
+---
+
+instance: sharelatex
+
+url: https://www.sharelatex.com
+
+visit: /user/settings
+
+pages:
+  - auth
+  - update
+
+auth:
+  title: Login
+  find:
+    - email
+    - password
+  input:
+    - login
+    - password
+
+update:
+  title: Account Settings
+  find:
+    - currentPassword
+    - newPassword1
+    - newPassword2
+  input:
+    - password
+    - new-password
+    - new-password

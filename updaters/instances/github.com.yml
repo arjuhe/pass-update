@@ -1,0 +1,31 @@
+---
+
+instance: github
+
+url: https://github.com
+
+visit: /settings/admin
+
+pages:
+  - auth
+  - update
+
+auth:
+  title: Sign in
+  find:
+    - login
+    - password
+  input:
+    - login
+    - password
+
+update:
+  title: Account
+  find:
+    - user[old_password]
+    - user[password]
+    - user[password_confirmation]
+  input:
+    - password
+    - new-password
+    - new-password

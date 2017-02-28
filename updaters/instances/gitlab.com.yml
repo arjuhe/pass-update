@@ -1,0 +1,31 @@
+---
+
+instance: gitlab
+
+url: https://gitlab.com
+
+visit: /profile/password/edit
+
+pages:
+  - auth
+  - update
+
+auth:
+  title: Sign in
+  find:
+    - user[login]
+    - user[password]
+  input:
+    - login
+    - password
+
+update:
+  title: Password
+  find:
+    - user[current_password]
+    - user[password]
+    - user[password_confirmation]
+  input:
+    - password
+    - new-password
+    - new-password

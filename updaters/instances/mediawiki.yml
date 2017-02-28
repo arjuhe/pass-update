@@ -1,0 +1,29 @@
+---
+
+instance: mediawiki
+
+url: https://en.wikipedia.org
+
+visit: /w/index.php?title=Special:ChangeCredentials/MediaWiki\Auth\PasswordAuthenticationRequest&returnto=Special%3APreferences
+
+pages:
+  - auth
+  - update
+
+auth:
+  title: Log
+  find:
+    - wpName
+    - wpPassword
+  input:
+    - login
+    - password
+
+update:
+  title: Change
+  find:
+    - password
+    - retype
+  input:
+    - new-password
+    - new-password
