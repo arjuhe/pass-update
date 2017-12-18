@@ -23,7 +23,7 @@ matrix:
 
 env:
   global:
-    - KCOV_VERSION=33
+    - PASS_VERSION=1.7.1 KCOV_VERSION=33
 
 addons:
   apt:
