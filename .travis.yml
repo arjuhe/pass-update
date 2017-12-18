@@ -6,7 +6,7 @@ matrix:
   include:
     - os: linux
       env:
-        - PREFIX="~/.bin/usr" PATH="$PATH:$PREFIX/bin"
+        - PREFIX="$HOME/.bin/usr" PATH="$PATH:$PREFIX/bin"
       before_install:
         - wget https://github.com/SimonKagstrom/kcov/archive/v$KCOV_VERSION.tar.gz
         - tar xzf v$KCOV_VERSION.tar.gz
@@ -15,14 +15,15 @@ matrix:
         - make --directory=kcov-$KCOV_VERSION/build
         - make install --directory=kcov-$KCOV_VERSION/build
         - rm -rf kcov-$KCOV_VERSION
+
     - os: osx
       env: PREFIX=/usr/local
-      before_install:
-        - brew install shellcheck xclip
+      install:
+        - brew install tree xclip shellcheck
 
 env:
   global:
-    - PASS_VERSION=1.7.1 KCOV_VERSION=33
+    - KCOV_VERSION=33
 
 addons:
   apt:
