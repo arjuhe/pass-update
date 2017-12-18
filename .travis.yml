@@ -18,7 +18,7 @@ matrix:
 
     - os: osx
       env: PREFIX=/usr/local
-      install:
+      before_install:
         - brew install tree xclip shellcheck
 
 env:
