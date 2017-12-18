@@ -1,10 +1,28 @@
-dist: trusty
+sudo: false
 
 language: bash
 
+matrix:
+  include:
+    - os: linux
+      env:
+        - PREFIX="~/.bin/usr" PATH="$PATH:$PREFIX/bin"
+      before_install:
+        - wget https://github.com/SimonKagstrom/kcov/archive/v$KCOV_VERSION.tar.gz
+        - tar xzf v$KCOV_VERSION.tar.gz
+        - mkdir kcov-$KCOV_VERSION/build
+        - cd kcov-$KCOV_VERSION/build && cmake -DCMAKE_INSTALL_PREFIX=$PREFIX .. && cd ../..
+        - make --directory=kcov-$KCOV_VERSION/build
+        - make install --directory=kcov-$KCOV_VERSION/build
+        - rm -rf kcov-$KCOV_VERSION
+    - os: osx
+      env: PREFIX=/usr/local
+      before_install:
+        - brew install shellcheck xclip
+
 env:
   global:
-    - PASS_VERSION=1.7 KCOV_VERSION=33
+    - PASS_VERSION=1.7.1 KCOV_VERSION=33
 
 addons:
   apt:
@@ -17,18 +35,10 @@ addons:
       - libdw-dev
       - cmake
 
-before_script:
-  - export PREFIX=$HOME/.bin/usr PATH="$PATH:$HOME/.bin/usr/bin"
+install:
   - wget https://git.zx2c4.com/password-store/snapshot/password-store-$PASS_VERSION.tar.xz
   - tar -xf password-store-$PASS_VERSION.tar.xz
   - make --directory=password-store-$PASS_VERSION install
-  - wget https://github.com/SimonKagstrom/kcov/archive/v$KCOV_VERSION.tar.gz
-  - tar xzf v$KCOV_VERSION.tar.gz
-  - mkdir kcov-$KCOV_VERSION/build
-  - cd kcov-$KCOV_VERSION/build && cmake -DCMAKE_INSTALL_PREFIX=$PREFIX .. && cd ../..
-  - make --directory=kcov-$KCOV_VERSION/build
-  - make install --directory=kcov-$KCOV_VERSION/build
-  - rm -rf kcov-$KCOV_VERSION
 
 script:
   - make lint
