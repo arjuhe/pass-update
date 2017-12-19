@@ -17,6 +17,7 @@
 # along with this program.  If not, see http://www.gnu.org/licenses/ .
 
 COVERAGE="true"
+[[ "$TRAVIS_OS_NAME" == "osx" ]] && COVERAGE=false
 if [[ "$COVERAGE" == "true" ]]; then
 	KCOV="$(which kcov)"
 	if [[ ! -e "$KCOV" ]]; then
