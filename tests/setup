@@ -34,6 +34,7 @@ EXT_HOME="$(dirname "$TEST_HOME")"
 # Check dependencies
 _die() { echo "${@}" && exit 1; }
 PASS="$(which pass)"; GPG="$(which gpg)"; COVERAGE=true; GIT=false
+[[ "$TRAVIS_OS_NAME" == "osx" ]] && COVERAGE=false
 [[ -e "$PASS" ]] || _die "Could not find pass command"
 if [[ ! -e "$GPG" ]]; then
 	if which gpg2 &>/dev/null; then
