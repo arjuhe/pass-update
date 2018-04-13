@@ -1,7 +1,7 @@
 PROG ?= update
-PREFIX ?= /usr
+PREFIX ?= /usr/local
 DESTDIR ?=
-LIBDIR ?= $(PREFIX)/lib
+LIBDIR ?= $(PREFIX)/Cellar/pass/1.7.1_1
 SYSTEM_EXTENSION_DIR ?= $(LIBDIR)/password-store/extensions
 MANDIR ?= $(PREFIX)/share/man
 
